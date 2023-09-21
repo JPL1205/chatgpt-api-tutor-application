@@ -21,6 +21,7 @@ export default function Chat({
   SCENARIOS,
   setSelectedScenario,
   selectedScenario,
+  toggleSidebar,
 }) {
   const [dark, setDark] = useState(true);
   const [input, setInput] = useState('');
@@ -47,10 +48,8 @@ export default function Chat({
         t ? 'bg-[#101010]' : 'bg-white'
       }`}>
       <div>
-        <div className="flex bg-[#4646462f] sm:justify-between lg:justify-end items-center py-2 px-4 gap-1">
-          <button
-            onClick={() => console.log('open menu')}
-            className="lg:hidden">
+        <div className="flex bg-[#4646462f] justify-between lg:justify-end items-center py-2 px-4 gap-1">
+          <button onClick={toggleSidebar} className="lg:hidden">
             <MenuIcon fontSize="large" />
           </button>
           <div className="flex items-center">

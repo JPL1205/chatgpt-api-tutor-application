@@ -1,6 +1,6 @@
 import Sidebar from './components/sidebar';
 import Chat from './components/chat';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { processMessageToChatGPT } from './api/chatgpt_api.js';
 import './App.css';
 
@@ -26,12 +26,17 @@ function App() {
 
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  // console.log(messages.length > 3 && messages[-1].sender === 'ChatGPT');
 
   // New state to handle level selection
   const [levelSelected, setLevelSelected] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-
-  // console.log(selectedScenario);
 
   const handleLevelSelect = (selectedLevel) => {
     setFadeOut(true);
@@ -67,22 +72,45 @@ function App() {
     );
   };
 
+  const handleSendScenario = async (scenario) => {
+    const newMessage = [
+      {
+        message: `學生選擇了在${scenario}情竟下的對話，請根據此情境生成一句開場的問句，以使引導學員互動。`,
+        sender: 'user',
+      },
+    ];
+    setMessages([]);
+    setTyping(true);
+
+    await processMessageToChatGPT(
+      newMessage,
+      setMessages,
+      setTyping,
+      level,
+      scenario
+    );
+  };
+
+  // useEffect to handle scenario change
+  useEffect(() => {
+    if (selectedScenario === '') {
+      return;
+    } else {
+      handleSendScenario(selectedScenario);
+    }
+  }, [selectedScenario]);
+
   function changeTheme() {
     theme === 'dark' ? setTheme('light') : setTheme('dark');
   }
 
   const handleLevelChange = (e) => {
     setLevel(e.target.value);
-    // console.log(e.target.value);
   };
 
   const handleScenarioChange = (e) => {
     setSelectedScenario(e.target.value);
-
-    // console.log(e.target.value);
   };
-
-  // console.log(theme);
 
   return (
     <div className="lg:flex">
@@ -135,10 +163,8 @@ function App() {
             level={level}
             handleScenarioChange={handleScenarioChange}
             scenario={selectedScenario}
+            open={sidebarOpen}
           />
-          {messages.map((mes, i) => {
-            console.log(mes);
-          })}
           <Chat
             theme={theme}
             changeTheme={changeTheme}
@@ -149,6 +175,7 @@ function App() {
             SCENARIOS={SCENARIOS}
             setSelectedScenario={setSelectedScenario}
             selectedScenario={selectedScenario}
+            toggleSidebar={toggleSidebar}
           />
         </>
       )}

@@ -9,15 +9,18 @@ export default function Sidebar({
   scenario,
   handleLevelChange,
   handleScenarioChange,
+  open,
 }) {
   const t = theme === 'dark';
-  console.log(level);
 
   return (
     <div
-      className={`${'px-4 py-[1rem] sm:w-full lg:w-[17.5%]'} ${
+      className={`sidebar open ${
+        open ? 'lg:block absolute' : 'hidden lg:block'
+      } px-4 py-[1rem] sm:w-[75%] lg:w-[17.5%] ${
         t ? 'bg-[#141313]' : 'bg-white'
-      }`}>
+      } top-0 bottom-0 right-0 z-10`}>
+      {/* <div className={`hidden lg:block px-4 py-[1rem] sm:w-full lg:w-[17.5%] ${open ?}`}> */}
       {/* <Switch /> */}
       <h1 className={`${styles.heading} ${t ? 'text-white' : 'text-black'}`}>
         對話等級選擇
@@ -42,7 +45,7 @@ export default function Sidebar({
       </p>
       <input
         type="text"
-        placeholder="背著額外需求"
+        placeholder="額外需求"
         className={`${styles.select} ${
           t ? 'bg-[#101010]' : 'bg-[#ECEBEB] text-black'
         }`}
